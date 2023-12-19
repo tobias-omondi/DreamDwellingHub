@@ -16,9 +16,9 @@ class User (db.Model):
     Password = db.Column (db.String, nullable = False)
 
     # Relationship
-    notificationsprocess = db.relationship ('Notifications', back_populates = 'users')
+    notifications = db.relationship ('Notifications', back_populates = 'users')
     ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'users')
-    transaction = db.relationship ('Transaction', back_populates = 'users')
+    transactions = db.relationship ('Transaction', back_populates = 'users')
     
 
 class Notifications (db.Model):
@@ -27,10 +27,10 @@ class Notifications (db.Model):
     notificationsType = db.Column (db.String, nullable = False)
     message = db.Column (db.String, nullable = False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
-    status = db.Column (db.Column, nullable = False)
+    status = db.Column (db.String, nullable = False)
 
     # Relationship
-    user = db.relationship ('User' , back_populates = 'notifications')
+    users = db.relationship ('User' , back_populates = 'notifications')
 
 class RatingsReviews (db.Model):
     __tablename__ = 'ratingsreviews'
@@ -54,8 +54,8 @@ class Transaction (db.Model):
     paymentstatus = db.Column (db.String, nullable = False)
 
     # relationship
-    user = db.relationship ('User', back_populates = 'transactions')
-    property= db.relationship ('Properties', back_populates = 'transactions')
+    users = db.relationship ('User', back_populates = 'transactions')
+    properties= db.relationship ('Properties', back_populates = 'transactions')
     
 
 class Company (db.Model):
@@ -68,10 +68,10 @@ class Company (db.Model):
     location = db.Column ( db.String,nullable = False)
 
     # Relationship
-    property = db.relationship ('Properties' , back_populates = 'companies')
-    ratingsreviews1 = db.relationship ('RatingsReviews', back_populates = 'companies')
+    properties = db.relationship ('Properties' , back_populates = 'companies')
+    ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'companies')
     news = db.relationship ('News', back_populates = 'companies')
-    agent = db.relationship ('Agent', back_populates = 'companies')
+    agents = db.relationship ('Agent', back_populates = 'companies')
    
 
 
@@ -86,9 +86,9 @@ class Properties (db.Model):
     location = db.Column ( db.String,nullable = False)
 
     # Relationship
-    company = db.relationship ('Company' , back_populates = 'properties')
-    property = db.relationship ('Properties', back_populates = 'properties')
-    transaction = db.relationship ('Transaction', back_populates = 'properties')
+    companies= db.relationship ('Company' , back_populates = 'properties')
+    properties = db.relationship ('Properties', back_populates = 'properties')
+    transactions = db.relationship ('Transaction', back_populates = 'properties')
     properties_images = db.relationship ('PropertiesImages', back_populates = 'properties')
 
 
@@ -98,32 +98,32 @@ class PropertiesImages (db.Model):
     img_url = db.Column (db.String, nullable = False)
 
     # Relationship
-    property = db.relationship ('Properties' , back_populates = 'propertiesImages')
+    properties = db.relationship ('Properties' , back_populates = 'propertiesImages')
 
 class News (db.Model):
     __tablename__ = 'news'
     id = db.Column (db.Integer, primary_key=True)
-    headlines = db.Column (db.string, nullable = False)
+    headlines = db.Column (db.String, nullable = False)
     news_img= db.Column (db.String, nullable = False)
     newspublication= db.Column (db.String, nullable = False)
 
     # relationship
-    company = db.relationship ('Company' , back_populates = 'news')
+    companies = db.relationship ('Company' , back_populates = 'news')
    
 class Agent (db.Model):
     __tablename__ = 'agents'
     id = db.Column (db.Integer, primary_key=True)
-    name = db.Column (db.string, nullable = False)
+    name = db.Column (db.String, nullable = False)
     email= db.Column (db.String, nullable = False)
     Phonenumber= db.Column (db.String, nullable = False)
 
     # Relationship
-    company= db.relationship ('Company' , back_populates = 'agents')
+    companies= db.relationship ('Company' , back_populates = 'agents')
     
 class Admin (db.Model):
     __tablename__ = 'admin'
     id = db.Column (db.Integer, primary_key=True)
-    fullname = db.Column (db.string, nullable = False)
+    fullname = db.Column (db.String, nullable = False)
     email= db.Column (db.String, nullable = False)
     price = db.Column (db.Float, nullable = False)
     Password = db.Column (db.String, nullable=False)
