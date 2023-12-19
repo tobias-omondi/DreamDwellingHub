@@ -30,6 +30,8 @@ class Notifications (db.Model):
     status = db.Column (db.String, nullable = False)
 
     # Relationship
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
     users = db.relationship ('User' , back_populates = 'notifications')
 
 class RatingsReviews (db.Model):
@@ -41,6 +43,10 @@ class RatingsReviews (db.Model):
     reviewsdate = db.Column (db.DateTime, default = datetime.utcnow)
 
     # Relationship
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
+    property_id = db.Column(db.Integer, db.ForeignKey('properties.id'), nullable=False)
+
     users = db.relationship ('User',back_populates = 'ratingsreviews' )
     company = db.relationship ('Company' , back_populates ='ratingsreviews')
     property = db.relationship ('Properties' , back_populates = 'ratingsreviews')
@@ -53,7 +59,11 @@ class Transaction (db.Model):
     amount = db.Column (db.Float, nullable = False)
     paymentstatus = db.Column (db.String, nullable = False)
 
+
     # relationship
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    property_id = db.Column(db.Integer, db.ForeignKey('properties.id'), nullable=False)
+
     users = db.relationship ('User', back_populates = 'transactions')
     properties= db.relationship ('Properties', back_populates = 'transactions')
     
@@ -86,6 +96,9 @@ class Properties (db.Model):
     location = db.Column ( db.String,nullable = False)
 
     # Relationship
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
+    property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
+    
     companies= db.relationship ('Company' , back_populates = 'properties')
     properties = db.relationship ('Properties', back_populates = 'properties')
     transactions = db.relationship ('Transaction', back_populates = 'properties')
