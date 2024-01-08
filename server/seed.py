@@ -35,3 +35,28 @@ with app.app_context():
    user6._password_hash='hashed_password'
    db.session.add(user6)
    db.session.commit()
+
+# seeding Notifications
+Notifications1 = Notifications(notificationsType='Reminder', message='New properties available', created_at=datetime.strptime('2024-01-01 08:00:00', '%Y-%m-%d %H:%M:%S'), status='unread', user_id=1)
+db.session.add(Notifications1)
+db.session.commit()
+
+Notifications2 = Notifications(notificationsType='Alert', message='Check out our latest news!', created_at=datetime.strptime('2024-01-01 08:00:00', '%Y-%m-%d %H:%M:%S'), status='read', user_id=2)
+db.session.add(Notifications2)
+db.session.commit()
+
+Notifications3 = Notifications(notificationsType='Alert', message='This might get your attention', created_at=datetime.strptime('2023-08-01 10:00:00', '%Y-%m-%d %H:%M:%S'), status='unread', user_id=3)
+db.session.add(Notifications3)
+db.session.commit()
+
+Notifications4 = Notifications(notificationsType='Information', message='Your appointment is Tomorrow', created_at=datetime.strptime('2024-01-02 08:00:00', '%Y-%m-%d %H:%M:%S'), status='read', user_id=4)
+db.session.add(Notifications4)
+db.session.commit()
+
+Notifications5 = Notifications(notificationsType='Request', message='Check out our latest news!', created_at=datetime.strptime('2024-01-01 08:00:00', '%Y-%m-%d %H:%M:%S'), status='read', user_id=5)
+db.session.add(Notifications5)
+db.session.commit()
+
+Notifications6 = Notifications(notificationsType='Information', message='Your message is being Reviewed', created_at=datetime.strptime('2023-10-01 11:00:00', '%Y-%m-%d %H:%M:%S'), status='unread', user_id=6)
+db.session.add(Notifications6)
+db.session.commit()
