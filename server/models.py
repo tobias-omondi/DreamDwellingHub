@@ -83,26 +83,24 @@ class Company (db.Model):
     news = db.relationship ('News', back_populates = 'companies')
     agents = db.relationship ('Agent', back_populates = 'companies')
    
-
-
 class Properties (db.Model):
-    __tablename__ = 'properties'
-    id = db.Column (db.Integer, primary_key=True)
-    name = db.Column (db.String, nullable = False)
-    bedrooms= db.Column (db.String, nullable = False)
-    price = db.Column (db.Float, nullable = False)
-    amenities = db.Column (db.String, nullable=False)
-    status = db.Column ( db.String, nullable = False)
-    location = db.Column ( db.String,nullable = False)
+   __tablename__ = 'properties'
+   id = db.Column (db.Integer, primary_key=True)
+   name = db.Column (db.String, nullable = False)
+   bedrooms= db.Column (db.String, nullable = False)
+   price = db.Column (db.Float, nullable = False)
+   amenities = db.Column (db.String, nullable=False)
+   status = db.Column ( db.String, nullable = False)
+   location = db.Column ( db.String,nullable = False)
 
-    # Relationship
-    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
-    property_id = db.Column(db.Integer, db.ForeignKey('properties.id'))
-    
-    companies= db.relationship ('Company' , back_populates = 'properties')
-    properties = db.relationship ('Properties', back_populates = 'properties')
-    transactions = db.relationship ('Transaction', back_populates = 'properties')
-    properties_images = db.relationship ('PropertiesImages', back_populates = 'properties')
+   # Relationship
+   company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
+
+   companies= db.relationship ('Company' , back_populates = 'properties')
+   transactions = db.relationship ('Transaction', back_populates = 'properties')
+   properties_images = db.relationship ('PropertiesImages', back_populates = 'properties')
+   ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'properties') # Add this line
+
 
 
 class PropertiesImages (db.Model):
