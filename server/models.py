@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from sqlalchemy import ForeignKeyConstraint
 
 
 
@@ -79,7 +80,7 @@ class Company (db.Model):
 
     # Relationship
     properties = db.relationship ('Properties' , back_populates = 'companies')
-    ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'companies')
+    ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'company')
     news = db.relationship ('News', back_populates = 'companies')
     agents = db.relationship ('Agent', back_populates = 'companies')
    
@@ -114,12 +115,15 @@ class PropertiesImages (db.Model):
 class News (db.Model):
     __tablename__ = 'news'
     id = db.Column (db.Integer, primary_key=True)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)
     headlines = db.Column (db.String, nullable = False)
     news_img= db.Column (db.String, nullable = False)
     newspublication= db.Column (db.String, nullable = False)
 
     # relationship
     companies = db.relationship ('Company' , back_populates = 'news')
+    
+...
    
 class Agent (db.Model):
     __tablename__ = 'agents'
@@ -127,6 +131,7 @@ class Agent (db.Model):
     name = db.Column (db.String, nullable = False)
     email= db.Column (db.String, nullable = False)
     Phonenumber= db.Column (db.String, nullable = False)
+    company_id = db.Column(db.Integer, db.ForeignKey('companies.id'), nullable=False)  
 
     # Relationship
     companies= db.relationship ('Company' , back_populates = 'agents')
