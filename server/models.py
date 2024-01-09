@@ -5,22 +5,20 @@ from sqlalchemy import ForeignKeyConstraint
 
 
 db = SQLAlchemy()
-
 class User (db.Model):
-    __tablename__ = 'users'
-    id = db.Column (db.Integer, primary_key=True)
-    first_name = db.Column (db.String, nullable = False)
-    last_name = db.Column (db.String, nullable = False)
-    email = db.Column (db.String, nullable = False)
-    location = db.Column (db.String, nullable=False)
-    budgetrange = db.Column ( db.String,nullable = False)
-    Password = db.Column (db.String, nullable = False)
+   __tablename__ = 'users'
+   id = db.Column (db.Integer, primary_key=True)
+   first_name = db.Column (db.String, nullable = False)
+   last_name = db.Column (db.String, nullable = False)
+   email = db.Column (db.String, nullable = False)
+   location = db.Column (db.String, nullable=False)
+   budgetrange = db.Column ( db.String,nullable = False)
+   Password = db.Column (db.String, nullable = False)
 
-    # Relationship
-    notifications = db.relationship ('Notifications', back_populates = 'users')
-    ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'users')
-    transactions = db.relationship ('Transaction', back_populates = 'users')
-    
+   # Relationship
+   notifications = db.relationship ('Notifications', back_populates = 'users')
+   ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'users')
+   transactions = db.relationship ('Transaction', back_populates = 'users')
 
 class Notifications (db.Model):
     __tablename__ = 'notifications'
@@ -100,18 +98,16 @@ class Properties (db.Model):
    companies= db.relationship ('Company' , back_populates = 'properties')
    transactions = db.relationship ('Transaction', back_populates = 'properties')
    properties_images = db.relationship ('PropertiesImages', back_populates = 'properties')
-   ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'properties') # Add this line
-
-
-
+   ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'property')
+   
 class PropertiesImages (db.Model):
-    __tablename__ = 'propertiesImages'
-    id = db.Column (db.Integer, primary_key=True)
-    img_url = db.Column (db.String, nullable = False)
+   __tablename__ = 'propertiesImages'
+   id = db.Column (db.Integer, primary_key=True)
+   img_url = db.Column (db.String, nullable = False)
+   properties_id = db.Column(db.Integer, db.ForeignKey('properties.id'), nullable=False)
 
-    # Relationship
-    properties = db.relationship ('Properties' , back_populates = 'propertiesImages')
-
+   # Relationship
+   properties = db.relationship ('Properties', back_populates='properties_images')
 class News (db.Model):
     __tablename__ = 'news'
     id = db.Column (db.Integer, primary_key=True)
