@@ -8,34 +8,34 @@ from werkzeug.security import check_password_hash
 
 db = SQLAlchemy()
 
-class User (db.Model, UserMixin):
+class User(db.Model, UserMixin):
     __tablename__ = 'users'
-    id = db.Column (db.Integer, primary_key=True)
-    first_name = db.Column (db.String, nullable = False)
-    last_name = db.Column (db.String, nullable = False)
-    email = db.Column (db.String, nullable = False)
-    location = db.Column (db.String, nullable=False)
-    budgetrange = db.Column ( db.String,nullable = False)
-    Password = db.Column (db.String, nullable = False)
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String, nullable=False)
+    last_name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    location = db.Column(db.String, nullable=False)
+    budgetrange = db.Column(db.String, nullable=False)
+    Password = db.Column(db.String, nullable=False)
 
     # Relationship
-    notifications = db.relationship ('Notifications', back_populates = 'users')
-    ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'users')
-    transactions = db.relationship ('Transaction', back_populates = 'users')
-    
+    notifications = db.relationship('Notifications', back_populates='user')
+
     def check_password(self, password):
         return check_password_hash(self.Password, password)
 
-class Notifications (db.Model):
+class Notifications(db.Model):
     __tablename__ = 'notifications'
-    id = db.Column (db.Integer,primary_key = True)
-    notificationsType = db.Column (db.String, nullable = False)
-    message = db.Column (db.String, nullable = False)
+    id = db.Column(db.Integer, primary_key=True)
+    notificationsType = db.Column(db.String, nullable=False)
+    message = db.Column(db.String, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow())
-    status = db.Column (db.String, nullable = False)
+    status = db.Column(db.String, nullable=False)
 
     # Relationship
-    users = db.relationship ('User' , back_populates = 'notifications')
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('User', back_populates='notifications')
+
 
 class RatingsReviews (db.Model):
     __tablename__ = 'ratingsreviews'
