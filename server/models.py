@@ -1,11 +1,14 @@
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from flask_login import UserMixin
+from werkzeug.security import check_password_hash
+
 
 
 
 db = SQLAlchemy()
 
-class User (db.Model):
+class User (db.Model, UserMixin):
     __tablename__ = 'users'
     id = db.Column (db.Integer, primary_key=True)
     first_name = db.Column (db.String, nullable = False)
@@ -20,6 +23,8 @@ class User (db.Model):
     ratingsreviews = db.relationship ('RatingsReviews', back_populates = 'users')
     transactions = db.relationship ('Transaction', back_populates = 'users')
     
+    def check_password(self, password):
+        return check_password_hash(self.Password, password)
 
 class Notifications (db.Model):
     __tablename__ = 'notifications'
