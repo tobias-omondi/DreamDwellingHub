@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, request, flash, redirect, url_for, render_template
+from flask import Flask,make_response, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_restful import Resource,Api
 from flask_migrate import Migrate
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user,current_user
 from models import db, User
-from forms import RegistrationForm
+from werkzeug.security import check_password_hash,generate_password_hash
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your_secret_key'
@@ -17,42 +19,64 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+api = Api(app)
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.route('/signup', methods=['POST'])
-def signup():
-    form = RegistrationForm(request.form)
-    if form.validate():
-        user = User(
-            first_name=form.first_name.data,
-            last_name=form.last_name.data,
-            email=form.email.data,
-            location=form.location.data,
-            budgetrange=form.budgetrange.data,
-            Password=form.password.data 
+class Home(Resource):
+    def get(self):
+        response_dict = {
+            "message": "Welcome to RealEstate "
+        }
+        response = make_response(
+            jsonify(response_dict),
+            200,
         )
-        db.session.add(user)
-        db.session.commit()
-        flash('User created successfully', 'success')
-        return redirect(url_for('login'))
-    else:
-        flash('Validation failed', 'error')
-        return jsonify({'error': 'Validation failed', 'errors': form.errors}), 400
+        return response
+api.add_resource(Home, "/")
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+
+class Login(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return jsonify({'message': 'Missing email or password'}), 400
+
         user = User.query.filter_by(email=email).first()
-        if user and user.check_password(password):
-            login_user(user, remember=True)
-            return redirect(url_for('index'))
+        if user and check_password_hash(user.Password, password):
+            login_user(user)
+            return jsonify({'message': 'Logged in successfully'}), 200
         else:
-            flash('Login Unsuccessful. Please check email and password', 'danger')
-    return render_template('login.html')
+            return jsonify({'message': 'Invalid email or password'}), 401
+        
+api.add_resource(Login, '/login')
+
+
+class Signup(Resource):
+    def post(self):
+        data = request.get_json()
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return jsonify({'message': 'Missing email or password'}), 400
+
+        if User.query.filter_by(email=email).first() is not None:
+            return jsonify({'message': 'Email already exists'}), 400
+
+        hashed_password = generate_password_hash(password, method='sha256')
+        new_user = User(email=email, Password=hashed_password)
+        db.session.add(new_user)
+        db.session.commit()
+
+        return jsonify({'message': 'User created successfully'}), 201
+
+api.add_resource(Signup, '/signup')
 
 if __name__ == '__main__':
     app.run(port=5550, debug=True)
